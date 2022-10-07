@@ -18,8 +18,8 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "80880"
+		port = "8080"
 	}
-	app.Logger.Fatal(app.Start(":" + "8080"))
+	app.Logger.Fatal(app.Start(":" + port))
 
 }

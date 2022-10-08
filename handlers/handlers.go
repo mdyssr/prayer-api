@@ -24,8 +24,9 @@ func Home(c echo.Context) error {
 	}{"Welcome Home!"})
 }
 
-func GetPrayerTimes(e echo.Context) error {
-	ipData, err := services.GetIPData()
+func GetPrayerTimes(c echo.Context) error {
+	clientIP := c.RealIP()
+	ipData, err := services.GetIPData(clientIP)
 	if err != nil {
 		return GetUserIPError
 	}
@@ -48,7 +49,7 @@ func GetPrayerTimes(e echo.Context) error {
 		return GetPrayerTimesError
 	}
 
-	return e.JSON(http.StatusOK, prayerTimes)
+	return c.JSON(http.StatusOK, prayerTimes)
 }
 
 /*

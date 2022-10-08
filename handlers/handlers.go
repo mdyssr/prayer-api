@@ -10,7 +10,7 @@ import (
 
 const GetUserIPError = Error("Error getting user IP")
 const GetPrayerMethodsError = Error("Error getting prayer methods")
-const GetPrayerTimesError = Error("Error getting prayer times")
+const GetPrayerDataError = Error("Error getting prayer data")
 
 type Error string
 
@@ -36,7 +36,6 @@ func GetPrayerTimes(c echo.Context) error {
 		return GetPrayerMethodsError
 	}
 
-	// key: method, value: location:
 	nearestMethodID := utils.GetNearestMethod(ipData.Coords, data)
 	//fmt.Println(nearestMethodID)
 	prayerTimesParams := &models.PrayerTimesParams{
@@ -46,38 +45,8 @@ func GetPrayerTimes(c echo.Context) error {
 
 	prayerTimes, err := services.GetPrayerData(prayerTimesParams)
 	if err != nil {
-		return GetPrayerTimesError
+		return GetPrayerDataError
 	}
 
 	return c.JSON(http.StatusOK, prayerTimes)
 }
-
-/*
-
-	ipData, err := services.GetIPData()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	data, err := services.GetMethods()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	// key: method, value: location:
-	nearestMethodID := utils.GetNearestMethod(ipData.Coords, data)
-	//fmt.Println(nearestMethodID)
-	prayerTimesParams := &models.PrayerTimesParams{
-		Coords:   ipData.Coords,
-		MethodID: nearestMethodID,
-	}
-
-	prayerTimes, err := services.GetPrayerData(prayerTimesParams)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println(prayerTimes)
-
-*/

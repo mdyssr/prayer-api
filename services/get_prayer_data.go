@@ -7,21 +7,25 @@ import (
 	"github.com/mdyssr/prayer-api/models"
 	"io"
 	"net/http"
-	"os"
 	"time"
 )
 
 const PRAYER_TIMINGS_BASE_URL = "https://api.aladhan.com/v1/timings/"
 
 type PrayersResponse struct {
-	Data Timings `json:"data"`
+	Data Data `json:"data"`
 }
 
-type Timings struct {
+type Data struct {
+	Date    Date                 `json:"date"`
 	Timings models.PrayerTimings `json:"timings"`
 }
 
-func GetPrayerData(params *models.PrayerTimesParams) (*models.PrayerTimings, error) {
+type Date struct {
+	HijriDate models.HijriDate `json:"hijri"`
+}
+
+func GetPrayerData(params *models.PrayerTimesParams) (*models.PrayersData, error) {
 	client := http.Client{}
 	now := time.Now().Unix()
 	url := fmt.Sprintf("%s%d?latitude=%g&longitude=%g&method=%d", PRAYER_TIMINGS_BASE_URL, now, params.Coords.Latitude, params.Coords.Longitude, params.MethodID)
@@ -41,39 +45,13 @@ func GetPrayerData(params *models.PrayerTimesParams) (*models.PrayerTimings, err
 		return nil, err
 	}
 
-	return &prayersResponse.Data.Timings, nil
+	prayerData := models.PrayersData{
+		HijriDate:     prayersResponse.Data.Date.HijriDate,
+		PrayerTimings: prayersResponse.Data.Timings,
+	}
+	return &prayerData, nil
 }
 
 func GetMethods() ([]models.PrayerMethod, error) {
-	//cwd, err := os.Getwd()
-	//if err != nil {
-	//	return nil, err
-	//}
-	//jsonFile := filepath.Join(cwd, "static", "methods_locations.json")
-	//return getMethodsFromFile(jsonFile)
-	//
-
 	return data.PrayerMethods, nil
-}
-
-func getMethodsFromFile(file string) ([]models.PrayerMethod, error) {
-	jsonFile, err := os.Open(file)
-
-	if err != nil {
-		return nil, err
-	}
-
-	jsonBytes, err := io.ReadAll(jsonFile)
-	if err != nil {
-		return nil, err
-	}
-
-	var prayerMethods []models.PrayerMethod
-
-	err = json.Unmarshal(jsonBytes, &prayerMethods)
-	if err != nil {
-		return nil, err
-	}
-
-	return prayerMethods, nil
 }

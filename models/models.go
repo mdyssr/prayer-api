@@ -20,6 +20,25 @@ type PrayerTimings struct {
 	Isha    string `json:"Isha"`
 }
 
+type HijriDate struct {
+	Day     string `json:"day"`
+	Weekday struct {
+		En string `json:"en"`
+		Ar string `json:"ar"`
+	} `json:"weekday"`
+	Month struct {
+		Number int    `json:"number"`
+		En     string `json:"en"`
+		Ar     string `json:"ar"`
+	} `json:"month"`
+	Year string `json:"year"`
+}
+
+type PrayersData struct {
+	PrayerTimings PrayerTimings
+	HijriDate     HijriDate
+}
+
 type PrayerTimesParams struct {
 	Coords   Coords
 	MethodID int

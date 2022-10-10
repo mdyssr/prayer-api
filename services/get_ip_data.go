@@ -13,7 +13,13 @@ const IP_URL = "https://ipapi.co/"
 type IPData struct {
 	IP string `json:"ip"`
 	models.Coords
+	models.IPDataError
 }
+
+// type IPData struct {
+// 	IP string `json:"ip"`
+// 	models.Coords
+// }
 
 func GetIPData(ip string) (*IPData, error) {
 	url := fmt.Sprintf("%s%s/json", IP_URL, ip)
@@ -37,5 +43,6 @@ func GetIPData(ip string) (*IPData, error) {
 		return nil, err
 
 	}
+
 	return ipData, nil
 }

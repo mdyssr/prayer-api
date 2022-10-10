@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 
@@ -45,6 +46,8 @@ func GetPrayerTimes(c echo.Context) error {
 	if ipData.IPDataError.Error {
 		return GetUserIPDataError
 	}
+
+	fmt.Println(ip.String())
 
 	data, err := services.GetMethods()
 	if err != nil {

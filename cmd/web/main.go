@@ -11,7 +11,7 @@ func main() {
 	app := echo.New()
 
 	app.Use(middleware.CORS())
-	// app.Use(middleware.Logger())
+	app.Use(middleware.Logger())
 
 	app.GET("/", handlers.Home)
 	app.GET("/api/times", handlers.GetPrayerTimes)

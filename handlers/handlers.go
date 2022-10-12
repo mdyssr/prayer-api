@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-	"net"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -11,8 +9,6 @@ import (
 	"github.com/mdyssr/prayer-api/utils"
 )
 
-const NoIPProvidedError = Error("No IP Provided")
-const InvalidIPError = Error("Invalid IP Address")
 const GetUserIPDataError = Error("Error getting user IP data")
 const GetPrayerMethodsError = Error("Error getting prayer methods")
 const GetPrayerDataError = Error("Error getting prayer data")
@@ -30,33 +26,20 @@ func Home(c echo.Context) error {
 }
 
 func GetPrayerTimes(c echo.Context) error {
-	clientIP := c.QueryParam("ip")
-	if clientIP == "" {
-		return NoIPProvidedError
-	}
-	ip := net.ParseIP(clientIP)
-	if ip == nil {
-		return InvalidIPError
-	}
-	ipData, err := services.GetIPData(ip.String())
+
+	geoData, err := services.GetGeoLocation()
 	if err != nil {
 		return GetUserIPDataError
 	}
 
-	if ipData.IPDataError.Error {
-		return GetUserIPDataError
-	}
-
-	fmt.Println(ip.String())
-
-	data, err := services.GetMethods()
+	methods, err := services.GetMethods()
 	if err != nil {
 		return GetPrayerMethodsError
 	}
 
-	nearestMethodID := utils.GetNearestMethod(ipData.Coords, data)
+	nearestMethodID := utils.GetNearestMethod(&geoData.Coords, methods)
 	prayerTimesParams := &models.PrayerTimesParams{
-		Coords:   ipData.Coords,
+		Coords:   geoData.Coords,
 		MethodID: nearestMethodID,
 	}
 

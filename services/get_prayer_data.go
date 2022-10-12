@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/mdyssr/prayer-api/data"
 	"github.com/mdyssr/prayer-api/models"
+	"github.com/mdyssr/prayer-api/utils"
 	"io"
 	"net/http"
 	"time"
@@ -46,8 +47,17 @@ func GetPrayerData(params *models.PrayerTimesParams) (*models.PrayersData, error
 	}
 
 	prayerData := models.PrayersData{
-		HijriDate:     prayersResponse.Data.Date.HijriDate,
-		PrayerTimings: prayersResponse.Data.Timings,
+		HijriDate: prayersResponse.Data.Date.HijriDate,
+		//PrayerTimings: prayersResponse.Data.Timings,
+		PrayerTimings: models.FormattedPrayerTimings{
+			*utils.FormatPrayerTiming("Fajr", prayersResponse.Data.Timings.Fajr),
+			*utils.FormatPrayerTiming("Sunrise", prayersResponse.Data.Timings.Sunrise),
+			*utils.FormatPrayerTiming("Dhuhr", prayersResponse.Data.Timings.Dhuhr),
+			*utils.FormatPrayerTiming("Asr", prayersResponse.Data.Timings.Asr),
+			*utils.FormatPrayerTiming("Sunset", prayersResponse.Data.Timings.Sunset),
+			*utils.FormatPrayerTiming("Maghrib", prayersResponse.Data.Timings.Maghrib),
+			*utils.FormatPrayerTiming("Isha", prayersResponse.Data.Timings.Isha),
+		},
 	}
 	return &prayerData, nil
 }

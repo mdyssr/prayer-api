@@ -1,13 +1,13 @@
 package models
 
-type IPDataError struct {
-	Error  bool   `json:"error"`
-	Reason string `json:"reason"`
-}
-
 type Coords struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
+}
+
+type GeoData struct {
+	IP string `json:"ip"`
+	Coords
 }
 
 type PrayerMethod struct {
@@ -25,6 +25,53 @@ type PrayerTimings struct {
 	Isha    string `json:"Isha"`
 }
 
+type StandardPrayerTimeDesignation struct {
+	Ar PrayerTimeLanguageDesignation
+	En PrayerTimeLanguageDesignation
+}
+type PrayerTimeLanguageDesignation struct {
+	Abbreviated string
+	Expanded    string
+}
+
+type StandardPrayerTime struct {
+	Value       string
+	Designation StandardPrayerTimeDesignation
+}
+
+type PrayerTimeDetails struct {
+	Military string
+	Standard StandardPrayerTime
+}
+
+type FormattedPrayerTiming struct {
+	Name string
+	Time PrayerTimeDetails
+}
+
+type FormattedPrayerTimings []FormattedPrayerTiming
+
+//
+//type FormattedPrayerTimings struct {
+//	Fajr    FormattedPrayerTiming `json:"fajr"`
+//	Sunrise FormattedPrayerTiming `json:"sunrise"`
+//	Dhuhr   FormattedPrayerTiming `json:"dhuhr"`
+//	Asr     FormattedPrayerTiming `json:"asr"`
+//	Sunset  FormattedPrayerTiming `json:"sunset"`
+//	Maghrib FormattedPrayerTiming `json:"maghrib"`
+//	Isha    FormattedPrayerTiming `json:"isha"`
+//}
+
+//type PrayerTimings struct {
+//	Fajr    string `json:"Fajr"`
+//	Sunrise string `json:"Sunrise"`
+//	Dhuhr   string `json:"Dhuhr"`
+//	Asr     string `json:"Asr"`
+//	Sunset  string `json:"Sunset"`
+//	Maghrib string `json:"Maghrib"`
+//	Isha    string `json:"Isha"`
+//}
+
 type HijriDate struct {
 	Day     string `json:"day"`
 	Weekday struct {
@@ -40,7 +87,7 @@ type HijriDate struct {
 }
 
 type PrayersData struct {
-	PrayerTimings PrayerTimings
+	PrayerTimings FormattedPrayerTimings
 	HijriDate     HijriDate
 }
 

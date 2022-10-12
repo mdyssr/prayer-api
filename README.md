@@ -16,4 +16,4 @@ Todos & Upcoming features:
 ⏳ - create a graphql server to make it possible for the client to specify which fields they need
 ⏳ - to make the API a GO library that can be used in other Go apps
 ⏳ - containerize the API
-
+⏳ - correct incoming Adhan API response arabic Hijri date week day name
